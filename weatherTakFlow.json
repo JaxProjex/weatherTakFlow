@@ -1,0 +1,362 @@
+[
+    {
+        "id": "805fe902a16b6900",
+        "type": "tab",
+        "label": "weatherTakFlow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ea7aa61198672db9",
+        "type": "tcp in",
+        "z": "805fe902a16b6900",
+        "name": "",
+        "server": "client",
+        "host": "10.237.104.20",
+        "port": "8089",
+        "datamode": "stream",
+        "datatype": "utf8",
+        "newline": "",
+        "topic": "",
+        "trim": false,
+        "base64": false,
+        "tls": "1c52b35895c06e7e",
+        "x": 240,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "733c530ca83fdf18",
+        "type": "tak",
+        "z": "805fe902a16b6900",
+        "name": "TAK",
+        "x": 450,
+        "y": 400,
+        "wires": [
+            [
+                "165e938ce7dcf5c3",
+                "7c1fb3ca824b7ade"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "4bf0b1f8a6ef6a39",
+        "type": "debug",
+        "z": "805fe902a16b6900",
+        "name": "debug json",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1170,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "165e938ce7dcf5c3",
+        "type": "function",
+        "z": "805fe902a16b6900",
+        "name": "function 3",
+        "func": "if (msg.payload.event.detail.contact._attributes.callsign === \"WEATHER\") {\n    msg.payload = {\n        \"lat\": msg.payload.event.point._attributes.lat,\n        \"lon\": msg.payload.event.point._attributes.lon,\n        \"uid\": msg.payload.event._attributes.uid\n    };\n    node.send(msg);\n} else {\n    return null;\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 440,
+        "wires": [
+            [
+                "4697dbbc52e3a094",
+                "2d3fb8dcfcdce3a0"
+            ]
+        ]
+    },
+    {
+        "id": "8bdd809e46716a82",
+        "type": "debug",
+        "z": "805fe902a16b6900",
+        "name": "debug http",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 970,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "2d47e2957b624065",
+        "type": "http request",
+        "z": "805fe902a16b6900",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://api.open-meteo.com/v1/forecast?latitude={{{payload.lat}}}&longitude={{{payload.lon}}}&hourly=temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,precipitation_probability,precipitation,rain,showers,snowfall,snow_depth,cloudcover,windspeed_10m,winddirection_10m&current_weather=true&windspeed_unit=ms&forecast_days=1",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 790,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c7ef1ac1e3fabcea",
+        "type": "json",
+        "z": "805fe902a16b6900",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1010,
+        "y": 360,
+        "wires": [
+            [
+                "4bf0b1f8a6ef6a39",
+                "2d3fb8dcfcdce3a0"
+            ]
+        ]
+    },
+    {
+        "id": "4697dbbc52e3a094",
+        "type": "http request",
+        "z": "805fe902a16b6900",
+        "name": "http req (1-day)",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://api.open-meteo.com/v1/forecast?latitude={{{payload.lat}}}&longitude={{{payload.lon}}}&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,precipitation_sum,rain_sum,showers_sum,snowfall_sum,precipitation_hours,precipitation_probability_max,windspeed_10m_max,winddirection_10m_dominant&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&forecast_days=1&timezone=auto",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 800,
+        "y": 280,
+        "wires": [
+            [
+                "c7ef1ac1e3fabcea",
+                "8bdd809e46716a82"
+            ]
+        ]
+    },
+    {
+        "id": "a368eee7ef6cc199",
+        "type": "tak",
+        "z": "805fe902a16b6900",
+        "name": "TAK",
+        "x": 1730,
+        "y": 400,
+        "wires": [
+            [
+                "96607856926f11db",
+                "fd95974f68426fc1"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "96607856926f11db",
+        "type": "debug",
+        "z": "805fe902a16b6900",
+        "name": "debug tak",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1800,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "fd95974f68426fc1",
+        "type": "tcp out",
+        "z": "805fe902a16b6900",
+        "name": "",
+        "host": "10.237.104.20",
+        "port": "8089",
+        "beserver": "client",
+        "base64": false,
+        "end": false,
+        "tls": "1c52b35895c06e7e",
+        "x": 1990,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "44713bafa41d4908",
+        "type": "function",
+        "z": "805fe902a16b6900",
+        "name": "weather data cot",
+        "func": "const short = 10000;\nconst cinco = 5 * 60 * 1000;\nconst diez = 2 * cinco;\nconst stale = new Date(Date.now() + short).toISOString();\nvar space = \" //////////////////////////////////////////////////// \";\n\nvar uid = msg.payload[0].uid;\nvar msg = msg.payload[1];\nvar lat = msg.latitude;\nvar lon = msg.longitude;\nvar sunny = \"f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/sunny.png\";\nvar cloudy = \"f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/partly_cloudy.png\";\nvar rain = \"f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/rainy.png\";\nvar snow = \"f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/snowflake_simple.png\";\nvar unknown = \"f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/info_circle.png\"\nvar icon;\n\n\nvar curr_desc;\nvar curr_time = String(msg.current_weather.time)\nvar curr_temp = String(msg.current_weather.temperature);\nvar curr_wind_sp = String(msg.current_weather.windspeed);\nvar curr_wind_dir = String(msg.current_weather.winddirection);\nvar curr_code = msg.current_weather.weathercode\nif (curr_code <= 1){\n    icon = sunny;\n} else if (curr_code <= 48){\n    icon = cloudy;\n} else if (curr_code <= 67){\n    icon = rain;\n} else if (curr_code <= 100){\n    icon = snow;\n} else {\n    icon = unknown;\n}\n\nif (curr_code === 0){\n    curr_desc = \"sunny\"\n} else if (curr_code === 1) {\n    curr_desc = \"mainly sunny\";\n} else if (curr_code === 2) {\n    curr_desc = \"partly cloudy\";\n} else if (curr_code === 3) {\n    curr_desc = \"cloudy\";\n} else if (curr_code === 45) {\n    curr_desc = \"foggy\";\n} else if (curr_code === 48) {\n    curr_desc = \"rime fog\";\n} else if (curr_code === 51) {\n    curr_desc = \"light drizzle\";\n} else if (curr_code === 53) {\n    curr_desc = \"drizzle\";\n} else if (curr_code === 55) {\n    curr_desc = \"heavy drizzle\";\n} else if (curr_code === 56) {\n    curr_desc = \"light freezing drizzle\";\n} else if (curr_code === 57) {\n    curr_desc = \"freezing drizzle\"\n} else if (curr_code === 61) {\n    curr_desc = \"light rain\";\n} else if (curr_code === 63) {\n    curr_desc = \"rain\";\n} else if (curr_code === 65) {\n    curr_desc = \"heavy rain\";\n} else if (curr_code === 66) {\n    curr_desc = \"freezing rain\";\n} else if (curr_code === 67) {\n    curr_desc = \"freezing rain\";\n} else if (curr_code === 71) {\n    curr_desc = \"light snow\";\n} else if (curr_code === 73) {\n    curr_desc = \"snow\";\n} else if (curr_code === 75) {\n    curr_desc = \"heavy snow\";\n} else if (curr_code === 77) {\n    curr_desc = \"snow grains\";\n} else if (curr_code === 80) {\n    curr_desc = \"light showers\";\n} else if (curr_code === 81) {\n    curr_desc = \"showers\";\n} else if (curr_code === 82) {\n    curr_desc = \"heavy showers\";\n} else if (curr_code === 85) {\n    curr_desc = \"snow showers\";\n} else if (curr_code === 86) {\n    curr_desc = \"snow showers\";\n} else if (curr_code === 95) {\n    curr_desc = \"thunderstorm\";\n} else if (curr_code === 96) {\n    curr_desc = \"thunderstorm with hail\";\n} else if (curr_code === 99) {\n    curr_desc = \"thunderstorm with hail\";\n} else {\n    curr_desc = \"n/a\";\n}\nvar curr_sum = \"[CURRENT WEATHER] wmo: \" + curr_code + \", \" + curr_desc + \", Temp: \" + curr_temp + \", Wind Speed: \" + curr_wind_sp + \", Wind Direction: \" + curr_wind_dir;\n\nvar desc;\nvar code = msg.daily.weathercode[0];\nif (code === 0) {\n    desc = \"sunny\";\n} else if (code === 1) {\n    desc = \"mainly sunny\";\n} else if (code === 2) {\n    desc = \"partly cloudy\";\n} else if (code === 3) {\n    desc = \"cloudy\";\n} else if (code === 45) {\n    desc = \"foggy\";\n} else if (code === 48) {\n    desc = \"rime fog\";\n} else if (code === 51) {\n    desc = \"light drizzle\";\n} else if (code === 53) {\n    desc = \"drizzle\";\n} else if (code === 55) {\n    desc = \"heavy drizzle\";\n} else if (code === 56) {\n    desc = \"light freezing drizzle\";\n} else if (code === 57) {\n    desc = \"freezing drizzle\";\n} else if (code === 61) {\n    desc = \"light rain\";\n} else if (code === 63) {\n    desc = \"rain\";\n} else if (code === 65) {\n    desc = \"heavy rain\";\n} else if (code === 66) {\n    desc = \"freezing rain\";\n} else if (code === 67) {\n    desc = \"freezing rain\";\n} else if (code === 71) {\n    desc = \"light snow\";\n} else if (code === 73) {\n    desc = \"snow\";\n} else if (code === 75) {\n    desc = \"heavy snow\";\n} else if (code === 77) {\n    desc = \"snow grains\";\n} else if (code === 80) {\n    desc = \"light showers\";\n} else if (code === 81) {\n    desc = \"showers\";\n} else if (code === 82) {\n    desc = \"heavy showers\";\n} else if (code === 85) {\n    desc = \"snow showers\";\n} else if (code === 86) {\n    desc = \"snow showers\";\n} else if (code === 95) {\n    desc = \"thunderstorm\";\n} else if (code === 96) {\n    desc = \"thunderstorm with hail\";\n} else if (code === 99) {\n    desc = \"thunderstorm with hail\";\n} else {\n    desc = \"n/a\";\n}\nvar max_temp = msg.daily.temperature_2m_max\nvar min_temp = msg.daily.temperature_2m_min\nvar sunrise = msg.daily.sunrise[0]\nvar sunset = msg.daily.sunset[0]\nvar max_wind = msg.daily.windspeed_10m_max\nvar dir_wind = msg.daily.winddirection_10m_dominant\nvar prob_rain = msg.daily.precipitation_probability_max[0]\nvar sum_precip = msg.daily.precipitation_sum[0]\nvar sum_rain = msg.daily.rain_sum[0]\nvar sum_shower = msg.daily.showers_sum[0]\nvar sum_snow = msg.daily.snowfall_sum[0]\nvar daily_sum = \"[NEXT DAY WEATHER] wmo: \" + code + \", \" + desc + \", Max Temp: \" + max_temp + \", Min Temp: \" + min_temp + \", Sunrise: \" + sunrise + \", Sunset: \" + sunset + \", Max Wind: \" + max_wind + \", Wind Direction: \" + dir_wind + \", Rain Probability: \" + prob_rain + \", Sum Precipitation: \" + sum_precip + \", Sum Rain: \" + sum_rain + \", Sum Shower: \" + sum_shower + \", Sum Snow: \" + sum_snow;\n\nvar weather = String(curr_sum + space + daily_sum);\n/*\nmsg.payload = {\n    \"event\": {\n        \"_attributes\": {\n            \"version\": \"2.0\",\n            \"uid\": \"\",\n            \"type\": \"a-u-G\",\n            \"how\": \"m-p\",\n            \"time\": new Date(Date.now()).toISOString(),\n            \"start\": new Date(Date.now()).toISOString(),\n            \"stale\": stale\n        },\n        \"point\": {\n            \"_attributes\": {\n                \"lat\": \"\"+ lat +\"\",\n                \"lon\": \"\"+ lon +\"\",\n                \"hae\": \"0.0\",\n                \"ce\": \"9999999.0\",\n                \"le\": \"9999999.0\"\n            }\n        },\n        \"detail\": {\n            \"remarks\": {\n                \"_text\": weather,\n            },\n        },\n    },\n}\n*/\n////////////////////////////////////\n\nmsg.payload = { \n    \"_declaration\": { \n        \"_attributes\": { \n            \"version\": \"1.0\", \n            \"encoding\": \"UTF-8\" \n        } \n    }, \n    \"event\": { \n        \"_attributes\": { \n            \"version\": \"2.0\", \n            \"uid\": uid,\n             \"type\": \"a-u-G\", \n             \"how\": \"h-g-i-g-o\", \n            \"time\": new Date(Date.now()).toISOString(), \n            \"start\": new Date(Date.now()).toISOString(), \n            \"stale\": stale \n             }, \n             \"point\": { \n                 \"_attributes\": { \n                     \"lat\": \"\"+ lat +\"\", \n                     \"lon\": \"\"+ lon +\"\", \n                     \"hae\": \"0.0\", \n                     \"ce\": \"9999999.0\", \n                     \"le\": \"9999999.0\" \n                    } \n                },\n                \"detail\": { \n                    \"contact\": { \n                        \"_attributes\": { \n                            \"callsign\": \"Weather Data\" \n                        } \n                    }, \n                        \"status\": { \n                            \"_attributes\": { \n                                \"readiness\": \"true\" \n                            } \n                        }, \n                        \"archive\": [{}, {}],  \n                        \"color\": { \n                            \"_attributes\": {\n                                \"argb\": \"-1\" \n                            } \n                        }, \"usericon\": { \n                            \"_attributes\": { \n                                \"iconsetpath\": icon, \n                            } \n                        }, \n                        \"remarks\": { \n                            \"_text\": weather,\n                        },  \n                    } \n                } \n            }\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1470,
+        "y": 400,
+        "wires": [
+            [
+                "3b8325041eda50d8",
+                "a368eee7ef6cc199"
+            ]
+        ]
+    },
+    {
+        "id": "3b8325041eda50d8",
+        "type": "debug",
+        "z": "805fe902a16b6900",
+        "name": "debug cot",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1590,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "d2384d691de40c1d",
+        "type": "udp out",
+        "z": "805fe902a16b6900",
+        "name": "",
+        "addr": "239.2.3.1",
+        "iface": "",
+        "port": "6969",
+        "ipv": "udp4",
+        "outport": "",
+        "base64": false,
+        "multicast": "multi",
+        "x": 1970,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "ae88845c1c301b5d",
+        "type": "udp in",
+        "z": "805fe902a16b6900",
+        "name": "",
+        "iface": "",
+        "port": "6969",
+        "ipv": "udp4",
+        "multicast": "true",
+        "group": "239.2.3.1",
+        "datatype": "utf8",
+        "x": 250,
+        "y": 380,
+        "wires": [
+            [
+                "733c530ca83fdf18"
+            ]
+        ]
+    },
+    {
+        "id": "7c1fb3ca824b7ade",
+        "type": "debug",
+        "z": "805fe902a16b6900",
+        "name": "debug cot traffic",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 600,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "2d3fb8dcfcdce3a0",
+        "type": "join",
+        "z": "805fe902a16b6900",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 1230,
+        "y": 440,
+        "wires": [
+            [
+                "44713bafa41d4908",
+                "140cc60757f0cb39"
+            ]
+        ]
+    },
+    {
+        "id": "140cc60757f0cb39",
+        "type": "debug",
+        "z": "805fe902a16b6900",
+        "name": "debug join",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1370,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "1c52b35895c06e7e",
+        "type": "tls-config",
+        "name": "node-red to takserver",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "node-red.pem",
+        "keyname": "node-red.key",
+        "caname": "ca.pem",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    }
+]
