@@ -50,7 +50,7 @@
         "type": "function",
         "z": "805fe902a16b6900",
         "name": "filter data",
-        "func": "var callsign = msg.payload.event.detail.contact._attributes.callsign;\nvar callsignZT = msg.payload.cotEvent.detail.contact.callsign;\nif (callsign === \"Weather\" || callsign === \"WEATHER\" || callsign === \"weather\") {\n    msg.payload = {\n        \"lat\": msg.payload.event.point._attributes.lat,\n        \"lon\": msg.payload.event.point._attributes.lon,\n        \"uid\": msg.payload.event._attributes.uid\n    };\n    node.send(msg);\n} else if (callsignZT === \"Weather\" || callsignZT === \"WEATHER\" || callsignZT === \"weather\") {\n    msg.payload = {\n        \"lat\": msg.payload.cotEvent.lat,\n        \"lon\": msg.payload.cotEvent.lon,\n        \"uid\": msg.payload.cotEvent.uid\n    };\n    node.send(msg);\n} else {\n    return null;\n};",
+        "func": "var callsign = msg.payload.event.detail.contact._attributes.callsign;\nif (callsign === \"Weather\" || callsign === \"WEATHER\" || callsign === \"weather\") {\n    msg.payload = {\n        \"lat\": msg.payload.event.point._attributes.lat,\n        \"lon\": msg.payload.event.point._attributes.lon,\n        \"uid\": msg.payload.event._attributes.uid\n    };\n    node.send(msg);\n} else {\n    return null;\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -230,7 +230,7 @@
         "type": "debug",
         "z": "805fe902a16b6900",
         "name": "debug cot traffic",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -332,7 +332,9 @@
         "x": 350,
         "y": 420,
         "wires": [
-            []
+            [
+                "38e814797aefa499"
+            ]
         ]
     },
     {
@@ -366,9 +368,7 @@
         "x": 340,
         "y": 480,
         "wires": [
-            [
-                "38e814797aefa499"
-            ]
+            []
         ]
     },
     {
